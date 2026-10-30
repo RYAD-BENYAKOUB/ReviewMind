@@ -23,6 +23,7 @@ import joblib
 import matplotlib
 matplotlib.use("Agg")  # Non-interactive backend for headless environments
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -114,25 +115,50 @@ def load_and_validate_data(csv_path: Path) -> pd.DataFrame:
 
 
 def plot_confusion_matrix(cm: np.ndarray, labels: list[str], output_path: Path) -> None:
-    """Generate and save a readable confusion matrix heatmap."""
-    plt.figure(figsize=(7, 6))
+    """Generate and save a readable confusion matrix heatmap using ReviewMind Dark Intelligence brand colors."""
+    fig, ax = plt.subplots(figsize=(7, 6))
+    fig.patch.set_facecolor("#0B0B0F")
+    ax.set_facecolor("#0B0B0F")
+
+    # Custom colormap from dark surface to brand blue
+    dark_blue_cmap = LinearSegmentedColormap.from_list(
+        "DarkIntelligenceBlue",
+        ["#121217", "#1E6BFF"],
+    )
+
     sns.heatmap(
         cm,
         annot=True,
         fmt="d",
-        cmap="Blues",
+        cmap=dark_blue_cmap,
         xticklabels=labels,
         yticklabels=labels,
         cbar=True,
-        annot_kws={"size": 12, "weight": "bold"},
+        linewidths=1.5,
+        linecolor="#0B0B0F",
+        annot_kws={"size": 12, "weight": "bold", "color": "#FFFFFF"},
+        ax=ax,
+        cbar_kws={"shrink": 0.8},
     )
-    plt.title("Internal Evaluation — Confusion Matrix\n(TF-IDF + Multinomial Naive Bayes)", fontsize=13, pad=15)
-    plt.xlabel("Predicted Sentiment", fontsize=11, labelpad=10)
-    plt.ylabel("True Sentiment", fontsize=11, labelpad=10)
+
+    ax.set_title("Internal Evaluation — Confusion Matrix\n(TF-IDF + Multinomial Naive Bayes)", fontsize=13, pad=15, color="#FFFFFF", weight="bold")
+    ax.set_xlabel("Predicted Sentiment", fontsize=11, labelpad=10, color="#8E8E93")
+    ax.set_ylabel("True Sentiment", fontsize=11, labelpad=10, color="#8E8E93")
+    ax.tick_params(colors="#8E8E93")
+
+    # Style colorbar ticks and label
+    cbar = ax.collections[0].colorbar
+    if cbar:
+        cbar.ax.yaxis.set_tick_params(color="#8E8E93")
+        plt.setp(plt.getp(cbar.ax.axes, "yticklabels"), color="#8E8E93")
+
+    for spine in ax.spines.values():
+        spine.set_edgecolor("#24242F")
+
     plt.tight_layout()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_path, dpi=300)
+    plt.savefig(output_path, dpi=300, facecolor=fig.get_facecolor(), edgecolor="none")
     plt.close()
     print(f"   -> Confusion matrix plot saved: '{output_path}'")
 

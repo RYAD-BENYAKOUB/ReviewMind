@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReviewMind — Dark Intelligence | NLP Sentiment Analysis Platform</title>
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .active-filter {
+      background-color: var(--rm-red) !important;
+      color: #FFFFFF !important;
+      border-color: var(--rm-red) !important;
+    }
+    .color-swatch {
+      width: 100%;
+      height: 70px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      border: 1px solid var(--rm-border-default);
+    }
+    .search-input {
+      background-color: var(--rm-bg-input);
+      border: 1px solid var(--rm-border-default);
+      border-radius: 6px;
+      padding: 8px 14px;
+      color: var(--rm-text-primary);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+      max-width: 320px;
+      transition: border-color 0.15s ease;
+    }
+    .search-input:focus {
+      border-color: var(--rm-blue);
+    }
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .matrix-table th, .matrix-table td {
+      padding: 10px 14px;
+      border: 1px solid var(--rm-border-default);
+      text-align: center;
+    }
+    .matrix-table th {
+      background-color: var(--rm-bg-surface);
+      color: var(--rm-text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    .matrix-diag {
+      background-color: rgba(30, 107, 255, 0.12);
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--rm-border-default);
+      border-top-color: var(--rm-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- SIDEBAR (Dominant Black: #0B0B0F) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-badge">
+        <div class="brand-logo-mark">R</div>
+        <div>
+          <div class="brand-title">REVIEWMIND</div>
+          <div class="brand-subtitle">Dark Intelligence</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Menu with Active Red Indicator (#E0122F) -->
+    <nav class="nav-menu">
+      <button class="nav-item active" data-tab="tab-classifier">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        Inference Studio
+      </button>
+
+      <button class="nav-item" data-tab="tab-benchmarks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        Model Benchmarks
+      </button>
+
+      <button class="nav-item" data-tab="tab-dataset-b">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        Dataset B Explorer
+      </button>
+
+      <button class="nav-item" data-tab="tab-annotations">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        Annotation Consensus
+      </button>
+
+      <button class="nav-item" data-tab="tab-design-system">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a7 7 0 0 0 7 7c0 3-2 5-2 5s-2-2-5-2a7 7 0 0 1-7-7c0-3.87 3.13-7 7-7z"></path></svg>
+        Brand Tokens & Palette
+      </button>
+    </nav>
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+      <div class="status-indicator">
+        <div id="backend-status-dot" class="status-dot"></div>
+        <span id="backend-status-text" style="font-weight: 600; color: var(--rm-text-primary);">Checking API...</span>
+      </div>
+      <div id="engine-info-text">TF-IDF (20k) + MNB (&alpha;=0.1)</div>
+      <div style="margin-top: 8px;">MIT License &bull; 2026</div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="page-title-wrap">
+        <h1>Hotel Review Sentiment Intelligence</h1>
+        <p>Production-Grade Multinomial Naive Bayes Classification Framework</p>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span id="header-dataset-badge" class="badge-model-version">Dataset A: 20,491 Reviews</span>
+        <a href="https://github.com/RYAD-BENYAKOUB/ReviewMind" target="_blank" class="btn btn-outline" style="font-size: 12px; padding: 6px 12px;">
+          GitHub Repository
+        </a>
+      </div>
+    </header>
+
+    <!-- Content Body -->
+    <div class="content-body">
+
+      <!-- ===================================================================
+           TAB 1: INFERENCE STUDIO / LIVE CLASSIFIER
+           =================================================================== -->
+      <section id="tab-classifier" class="dashboard-tab-content">
+        <div class="metric-grid">
+          <div class="stat-card">
+            <div class="stat-label">Model Accuracy</div>
+            <div class="stat-value" id="kpi-accuracy" style="color: var(--rm-blue);">80.12%</div>
+            <div class="stat-subtext" id="kpi-accuracy-subtext">Internal Test Set (4,099 reviews)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Macro F1-Score</div>
+            <div class="stat-value" id="kpi-macro-f1" style="color: var(--rm-red);">0.6762</div>
+            <div class="stat-subtext" id="kpi-macro-f1-subtext">+0.1513 vs MNB baseline</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Neutral Class F1</div>
+            <div class="stat-value" id="kpi-neutral-f1" style="color: var(--rm-gray-muted);">0.3883</div>
+            <div class="stat-subtext" id="kpi-neutral-f1-subtext">Balanced prior activation</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Vocabulary Size</div>
+            <div class="stat-value" id="kpi-vocab-size">20,000</div>
+            <div class="stat-subtext" id="kpi-vocab-subtext">Unigrams + Bigrams</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Live Review Sentiment Classifier</span>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-outline btn-sample" data-sample="pos" style="font-size: 11.5px; padding: 4px 10px;">Sample Positive</button>
+              <button class="btn btn-outline btn-sample" data-sample="neu" style="font-size: 11.5px; padding: 4px 10px;">Sample Neutral</button>
+              <button class="btn btn-outline btn-sample" data-sample="neg" style="font-size: 11.5px; padding: 4px 10px;">Sample Negative</button>
+            </div>
+          </div>
+
+          <textarea id="review-input" class="textarea-input" placeholder="Type or paste any hotel review text here to test the live ReviewMind sentiment classification model..."></textarea>
+
+          <div style="display: flex; gap: 12px; margin-top: 16px;">
+            <!-- Primary Action in Red (#E0122F) -->
+            <button id="btn-analyze" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Classify Sentiment
+            </button>
+            <!-- Secondary Action in Blue (#1E6BFF) -->
+            <button id="btn-clear" class="btn btn-secondary">
+              Clear Text
+            </button>
+          </div>
+
+          <!-- Loading State Indicator -->
+          <div id="inference-loading" style="display: none; margin-top: 20px; padding: 24px; background-color: var(--rm-bg-surface); border: 1px solid var(--rm-border-default); border-radius: 6px; text-align: center;">
+            <div class="spinner" style="margin-bottom: 12px;"></div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--rm-text-primary);">Processing Inference via Flask REST API...</div>
+            <div style="font-size: 11.5px; color: var(--rm-text-muted); margin-top: 4px;">Extracting TF-IDF n-grams & calculating MultinomialNB posterior probabilities</div>
+          </div>
+
+          <!-- Error State Banner with Retry -->
+          <div id="inference-error" style="display: none; margin-top: 20px; padding: 18px 20px; background-color: rgba(224, 18, 47, 0.08); border: 1px solid var(--rm-red); border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <div style="font-size: 13.5px; font-weight: 700; color: #FFFFFF; display: flex; align-items: center; gap: 8px;">
+                  <span style="color: var(--rm-red); font-size: 16px;">&#9888;</span>
+                  <span>Backend API Connection Error</span>
+                </div>
+                <p id="inference-error-msg" style="font-size: 12.5px; color: var(--rm-text-secondary); margin-top: 4px; line-height: 1.4;">
+                  Cannot connect to the ReviewMind API. Please verify the Flask backend is running on port 5000.
+                </p>
+              </div>
+              <button id="btn-retry-predict" class="btn btn-primary" style="font-size: 12px; padding: 7px 16px;">
+                Retry Prediction
+              </button>
+            </div>
+          </div>
+
+          <!-- Inference Result Display (Real Backend Predictions Only) -->
+          <div id="inference-result" style="display: none; margin-top: 24px; padding: 20px; background-color: var(--rm-bg-surface); border: 1px solid var(--rm-border-default); border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--rm-text-muted); text-transform: uppercase;">Prediction:</span>
+                <span id="res-badge" class="badge-sentiment badge-positive">POSITIVE</span>
+              </div>
+              <span id="res-conf" style="font-size: 13px; font-weight: 700; color: var(--rm-text-primary);">88.4% Confidence</span>
+            </div>
+
+            <!-- Probability Breakdown Bars -->
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600;">
+                  <span style="color: var(--rm-blue);">Positive Probability</span>
+                  <span id="prob-pos-val" style="color: var(--rm-blue);">0.0%</span>
+                </div>
+                <div class="confidence-track">
+                  <div id="prob-pos-bar" class="confidence-fill-pos" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600;">
+                  <span style="color: var(--rm-gray-muted);">Neutral Probability</span>
+                  <span id="prob-neu-val" style="color: var(--rm-gray-muted);">0.0%</span>
+                </div>
+                <div class="confidence-track">
+                  <div id="prob-neu-bar" class="confidence-fill-neu" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600;">
+                  <span style="color: var(--rm-red);">Negative Probability</span>
+                  <span id="prob-neg-val" style="color: var(--rm-red);">0.0%</span>
+                </div>
+                <div class="confidence-track">
+                  <div id="prob-neg-bar" class="confidence-fill-neg" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Salient Features / Detected N-Grams -->
+            <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rm-border-default);">
+              <div style="font-size: 11.5px; font-weight: 600; color: var(--rm-text-muted); margin-bottom: 8px; text-transform: uppercase;">
+                Salient N-Grams Detected:
+              </div>
+              <div id="extracted-tokens" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 2: MODEL BENCHMARKS & SCIENTIFIC COMPARISON
+           =================================================================== -->
+      <section id="tab-benchmarks" class="dashboard-tab-content" style="display: none;">
+        <div class="card">
+          <div class="card-title">
+            <span>Multinomial Naive Bayes Hyperparameter Comparison</span>
+            <span class="badge-sentiment badge-negative">Production Selected: Model 3</span>
+          </div>
+          <p style="font-size: 13px; color: var(--rm-text-secondary); margin-bottom: 20px;">
+            Scientific evaluation on 4,099 unseen test reviews from TripAdvisor Hotel Reviews dataset. Demonstrating the resolution of the neutral class collapse problem through prior balance and Laplace smoothing adjustment.
+          </p>
+
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Model Architecture</th>
+                <th>Smoothing (&alpha;)</th>
+                <th>Fit Prior</th>
+                <th>Accuracy</th>
+                <th>Macro F1</th>
+                <th>Negative F1</th>
+                <th>Neutral F1</th>
+                <th>Positive F1</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-table-body">
+              <tr>
+                <td><strong>Model 1 (Baseline)</strong></td>
+                <td>1.0</td>
+                <td>True (Empirical)</td>
+                <td>81.97%</td>
+                <td>0.5249</td>
+                <td><span style="color: var(--rm-red);">0.6802</span></td>
+                <td><span style="color: var(--rm-gray-muted);">0.0000</span></td>
+                <td><span style="color: var(--rm-blue);">0.8945</span></td>
+              </tr>
+              <tr>
+                <td><strong>Model 2 (Uniform Prior)</strong></td>
+                <td>1.0</td>
+                <td>False (Uniform)</td>
+                <td>85.17%</td>
+                <td>0.6153</td>
+                <td><span style="color: var(--rm-red);">0.7730</span></td>
+                <td><span style="color: var(--rm-gray-muted);">0.1477</span></td>
+                <td><span style="color: var(--rm-blue);">0.9253</span></td>
+              </tr>
+              <tr class="champion">
+                <td><strong>Model 3 (Alternative Smoothing) ★</strong></td>
+                <td>0.1</td>
+                <td>False (Uniform)</td>
+                <td>80.12%</td>
+                <td><strong>0.6762</strong></td>
+                <td><span style="color: var(--rm-red);">0.7454</span></td>
+                <td><strong style="color: #FFFFFF;">0.3883</strong></td>
+                <td><span style="color: var(--rm-blue);">0.8949</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top: 24px; padding: 16px; background-color: var(--rm-bg-surface); border-left: 3px solid var(--rm-red); border-radius: 4px;">
+            <div style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin-bottom: 4px;">Key Finding: Neutral Minority Class Recovery</div>
+            <p style="font-size: 12.5px; color: var(--rm-text-secondary); line-height: 1.5;">
+              Model 1 suffered from severe majority-class collapse, assigning zero reviews to the neutral category (F1 = 0.0000). Setting <code style="color: var(--rm-blue); background: var(--rm-bg-card); padding: 1px 4px;">fit_prior=False</code> alongside reduced Laplace smoothing (<code style="color: var(--rm-red); background: var(--rm-bg-card); padding: 1px 4px;">alpha=0.1</code>) restored class sensitivity, yielding a <strong>Macro F1 of 0.6762</strong> and an operational neutral F1 of <strong>0.3883</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Production Model 3 Confusion Matrix Card -->
+        <div class="card">
+          <div class="card-title">
+            <span>Model 3 Confusion Matrix (Internal Test Set: 4,099 Reviews)</span>
+            <span class="badge-sentiment badge-positive">Verified Evaluation</span>
+          </div>
+          <p style="font-size: 13px; color: var(--rm-text-secondary); margin-bottom: 16px;">
+            Rows represent true human labels from TripAdvisor; columns represent Model 3 predictions. Diagonal cells indicate correct classifications.
+          </p>
+
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th style="text-align: left;">True Label \ Predicted</th>
+                <th>Negative (Pred)</th>
+                <th>Neutral (Pred)</th>
+                <th>Positive (Pred)</th>
+                <th>Total True</th>
+              </tr>
+            </thead>
+            <tbody id="confusion-matrix-body">
+              <tr>
+                <td style="text-align: left; font-weight: 700; color: var(--rm-red);">Negative (True)</td>
+                <td class="matrix-diag">451 (74.5%)</td>
+                <td>84 (13.9%)</td>
+                <td>70 (11.6%)</td>
+                <td style="font-weight: 600;">605</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; font-weight: 700; color: var(--rm-gray-muted);">Neutral (True)</td>
+                <td>92 (25.1%)</td>
+                <td class="matrix-diag">142 (38.8%)</td>
+                <td>132 (36.1%)</td>
+                <td style="font-weight: 600;">366</td>
+              </tr>
+              <tr>
+                <td style="text-align: left; font-weight: 700; color: var(--rm-blue);">Positive (True)</td>
+                <td>289 (9.2%)</td>
+                <td>148 (4.7%)</td>
+                <td class="matrix-diag">2,691 (86.0%)</td>
+                <td style="font-weight: 600;">3,128</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 3: DATASET B EXTERNAL EXPLORER
+           =================================================================== -->
+      <section id="tab-dataset-b" class="dashboard-tab-content" style="display: none;">
+        <div class="card">
+          <div class="card-title">
+            <span>Dataset B: Eco-hotel Reviews (Calheiros et al., 2017)</span>
+            <span style="font-size: 12px; font-weight: 600; color: var(--rm-text-muted);">External Zero-Shot Generalization Test</span>
+          </div>
+
+          <div class="metric-grid" style="margin-bottom: 20px;">
+            <div class="stat-card">
+              <div class="stat-label">Total Unique Reviews</div>
+              <div class="stat-value" id="dataset-total-reviews">399</div>
+              <div class="stat-subtext">2 duplicates pruned</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Positive Inferred</div>
+              <div class="stat-value" id="dataset-pos-count" style="color: var(--rm-blue);">335 (84.0%)</div>
+              <div class="stat-subtext">Avg Confidence: 60.0%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Neutral Inferred</div>
+              <div class="stat-value" id="dataset-neu-count" style="color: var(--rm-gray-muted);">33 (8.3%)</div>
+              <div class="stat-subtext">Avg Confidence: 42.4%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Negative Inferred</div>
+              <div class="stat-value" id="dataset-neg-count" style="color: var(--rm-red);">31 (7.8%)</div>
+              <div class="stat-subtext">Avg Confidence: 46.0%</div>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn btn-outline dataset-filter-btn active-filter" data-filter="all" style="font-size: 12px; padding: 6px 14px;">All Reviews</button>
+              <button class="btn btn-outline dataset-filter-btn" data-filter="positive" style="font-size: 12px; padding: 6px 14px; color: var(--rm-blue);">Positive Only</button>
+              <button class="btn btn-outline dataset-filter-btn" data-filter="neutral" style="font-size: 12px; padding: 6px 14px; color: var(--rm-gray-muted);">Neutral Only</button>
+              <button class="btn btn-outline dataset-filter-btn" data-filter="negative" style="font-size: 12px; padding: 6px 14px; color: var(--rm-red);">Negative Only</button>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center; width: 100%; max-width: 320px;">
+              <input type="text" id="dataset-search-input" class="search-input" placeholder="Search reviews by keyword...">
+              <button id="btn-clear-search" class="btn btn-outline" style="font-size: 11.5px; padding: 6px 10px; display: none;">Clear</button>
+            </div>
+          </div>
+
+          <!-- Loading state for Dataset B reviews -->
+          <div id="dataset-loading" style="display: none; padding: 24px; text-align: center; background-color: var(--rm-bg-surface); border: 1px solid var(--rm-border-default); border-radius: 6px; margin-bottom: 16px;">
+            <div class="spinner" style="margin-bottom: 8px;"></div>
+            <div style="font-size: 12.5px; color: var(--rm-text-muted);">Fetching reviews from API...</div>
+          </div>
+
+          <!-- Reviews Container -->
+          <div id="dataset-b-list"></div>
+
+          <!-- Pagination Controls -->
+          <div id="dataset-pagination" style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--rm-border-default);">
+            <button id="dataset-prev-btn" class="btn btn-outline" style="font-size: 12px; padding: 6px 14px;">
+              &larr; Previous Page
+            </button>
+            <span id="dataset-page-info" style="font-size: 12.5px; font-weight: 600; color: var(--rm-text-muted);">
+              Page 1 of 40
+            </span>
+            <button id="dataset-next-btn" class="btn btn-outline" style="font-size: 12px; padding: 6px 14px;">
+              Next Page &rarr;
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 4: ANNOTATION CONSENSUS WORKFLOW
+           =================================================================== -->
+      <section id="tab-annotations" class="dashboard-tab-content" style="display: none;">
+        <div class="card">
+          <div class="card-title">
+            <span>Human Annotation Protocol & Dual-Reviewer Consensus</span>
+            <span id="consensus-status-badge" class="badge-sentiment badge-neutral">STATUS: PENDING CONSENSUS</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--rm-text-secondary); line-height: 1.6; margin-bottom: 20px;">
+            Because Dataset B originally lacked sentiment labels or numerical ratings, ReviewMind established a rigorous double-blind human annotation protocol under standardized guidelines (<code style="color: var(--rm-blue);">data/external/ANNOTATION_GUIDELINES.md</code>).
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            <div style="background-color: var(--rm-bg-surface); padding: 18px; border-radius: 6px; border: 1px solid var(--rm-border-default);">
+              <div style="font-size: 12px; font-weight: 700; color: var(--rm-text-muted); text-transform: uppercase; margin-bottom: 6px;">Protocol Phase 1</div>
+              <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">Independent Double-Blind Annotation</h3>
+              <p style="font-size: 12.5px; color: var(--rm-text-secondary);">
+                Annotator A and Annotator B evaluate all 399 unique reviews independently in CSV isolation without seeing model predictions or peer annotations.
+              </p>
+            </div>
+
+            <div style="background-color: var(--rm-bg-surface); padding: 18px; border-radius: 6px; border: 1px solid var(--rm-border-default);">
+              <div style="font-size: 12px; font-weight: 700; color: var(--rm-text-muted); text-transform: uppercase; margin-bottom: 6px;">Protocol Phase 2</div>
+              <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">Inter-Annotator Agreement (Cohen's &kappa;)</h3>
+              <p style="font-size: 12.5px; color: var(--rm-text-secondary);">
+                Cohen's Kappa coefficient is computed to establish statistical reliability before consensus adjudication.
+              </p>
+            </div>
+
+            <div style="background-color: var(--rm-bg-surface); padding: 18px; border-radius: 6px; border: 1px solid var(--rm-border-default);">
+              <div style="font-size: 12px; font-weight: 700; color: var(--rm-text-muted); text-transform: uppercase; margin-bottom: 6px;">Protocol Phase 3</div>
+              <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 8px;">Adjudicated Consensus Reference</h3>
+              <p style="font-size: 12.5px; color: var(--rm-text-secondary);">
+                All discordant reviews are resolved through guided consensus to establish an authoritative ground-truth benchmark for external F1 evaluation.
+              </p>
+            </div>
+          </div>
+
+          <!-- Scientific Integrity Notice Card -->
+          <div style="padding: 18px 20px; background-color: var(--rm-bg-surface); border-left: 3px solid var(--rm-blue); border-radius: 4px;">
+            <div style="font-size: 13px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+              <span style="color: var(--rm-blue);">&#9432;</span>
+              <span>Scientific Integrity Standard: No Fabricated External Metrics</span>
+            </div>
+            <p style="font-size: 12.5px; color: var(--rm-text-secondary); line-height: 1.6;">
+              ReviewMind strictly refrains from publishing unverified external accuracy or F1-scores prior to double-blind consensus adjudication. Supervised benchmark metrics on Dataset B will be automatically computed once <code style="color: var(--rm-blue);">data/external/annotation_consensus.csv</code> contains completed ground-truth labels.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           TAB 5: BRAND TOKENS & PALETTE (DARK INTELLIGENCE)
+           =================================================================== -->
+      <section id="tab-design-system" class="dashboard-tab-content" style="display: none;">
+        <div class="card">
+          <div class="card-title">
+            <span>Definitive Brand Color Palette — Dark Intelligence</span>
+            <span class="badge-sentiment badge-positive">Mandatory System Tokens</span>
+          </div>
+
+          <p style="font-size: 13.5px; color: var(--rm-text-secondary); line-height: 1.6; margin-bottom: 24px;">
+            The ReviewMind visual identity strictly enforces a three-color palette designed for high cognitive contrast, executive elegance, and professional AI-driven text mining.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            <div>
+              <div class="color-swatch" style="background-color: #0B0B0F; color: #FFFFFF; border-color: #24242F;">
+                <span>#0B0B0F</span>
+                <span style="font-size: 9px; color: #8E8E93;">BLACK &bull; 75% DOMINANT</span>
+              </div>
+              <div style="margin-top: 8px; font-size: 12px; color: var(--rm-text-secondary);">
+                <strong>Role:</strong> Main body, sidebar, background surfaces.
+              </div>
+            </div>
+
+            <div>
+              <div class="color-swatch" style="background-color: #1E6BFF; color: #FFFFFF;">
+                <span>#1E6BFF</span>
+                <span style="font-size: 9px; color: rgba(255,255,255,0.8);">BLUE &bull; 15% SECONDARY</span>
+              </div>
+              <div style="margin-top: 8px; font-size: 12px; color: var(--rm-text-secondary);">
+                <strong>Role:</strong> Links, secondary buttons, positive sentiment.
+              </div>
+            </div>
+
+            <div>
+              <div class="color-swatch" style="background-color: #E0122F; color: #FFFFFF;">
+                <span>#E0122F</span>
+                <span style="font-size: 9px; color: rgba(255,255,255,0.8);">RED &bull; 10% COMPLEMENTARY</span>
+              </div>
+              <div style="margin-top: 8px; font-size: 12px; color: var(--rm-text-secondary);">
+                <strong>Role:</strong> Primary actions, active nav, negative sentiment.
+              </div>
+            </div>
+
+            <div>
+              <div class="color-swatch" style="background-color: #8E8E93; color: #0B0B0F;">
+                <span>#8E8E93</span>
+                <span style="font-size: 9px; color: #24242F;">NEUTRAL GRAY</span>
+              </div>
+              <div style="margin-top: 8px; font-size: 12px; color: var(--rm-text-secondary);">
+                <strong>Role:</strong> Neutral sentiment, metadata text, secondary borders.
+              </div>
+            </div>
+          </div>
+
+          <div style="background-color: var(--rm-bg-surface); padding: 18px; border-radius: 6px; border: 1px solid var(--rm-border-default);">
+            <div style="font-size: 12.5px; font-weight: 700; color: #FFFFFF; margin-bottom: 8px;">Design Rules & Strict Restrictions</div>
+            <ul style="font-size: 12.5px; color: var(--rm-text-secondary); line-height: 1.8; margin-left: 20px;">
+              <li>Strict color hierarchy: ~75% Black, ~15% Blue, ~10% Red.</li>
+              <li>White and neutral gray are reserved strictly for typography, borders, and readability.</li>
+              <li>Forbidden: Purple, green, orange, yellow, cyan, pink, rainbow gradients, and excessive neon gaming glow.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- API Service Layer (must precede app.js) -->
+<script src="js/api.js"></script>
+<!-- Application Orchestration Logic -->
+<script src="app.js"></script>
+</body>
+</html>

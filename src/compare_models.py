@@ -98,21 +98,32 @@ def load_and_validate_data(csv_path: Path) -> pd.DataFrame:
 def generate_comparison_plots(results: list[dict], output_path: Path) -> None:
     """
     Generate comparison figures displaying Macro F1 across all three configurations
-    along with class-level F1-scores, highlighting the impact on the neutral class.
+    along with class-level F1-scores, using the ReviewMind Dark Intelligence brand palette:
+    - Dominant Dark: #0B0B0F
+    - Blue Accent: #1E6BFF
+    - Red Accent: #E0122F
+    - Neutral Gray: #8E8E93
     """
     fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
-    palette = ["#4C72B0", "#55A868", "#C44E52"]
+    fig.patch.set_facecolor("#0B0B0F")
+
+    # Dark theme palette for models: M1 (Neutral Gray), M2 (Brand Blue), M3 Champion (Brand Red)
+    palette = ["#8E8E93", "#1E6BFF", "#E0122F"]
 
     model_names = [r["model_name"] for r in results]
     macro_f1s = [r["metrics"]["macro_f1"] for r in results]
 
     # --- Subplot 1: Macro F1 Comparison ---
     ax1 = axes[0]
-    bars1 = ax1.bar(model_names, macro_f1s, color=palette, width=0.55, edgecolor="black", linewidth=0.8)
-    ax1.set_title("Macro F1-Score Comparison", fontsize=13, weight="bold", pad=12)
-    ax1.set_ylabel("Macro F1-Score", fontsize=11)
+    ax1.set_facecolor("#0B0B0F")
+    bars1 = ax1.bar(model_names, macro_f1s, color=palette, width=0.55, edgecolor="#121217", linewidth=1.0)
+    ax1.set_title("Macro F1-Score Comparison", fontsize=13, weight="bold", pad=12, color="#FFFFFF")
+    ax1.set_ylabel("Macro F1-Score", fontsize=11, color="#8E8E93")
     ax1.set_ylim(0, 1.0)
-    ax1.grid(axis="y", linestyle="--", alpha=0.5)
+    ax1.grid(axis="y", linestyle="--", alpha=0.35, color="#24242F")
+    ax1.tick_params(colors="#8E8E93")
+    for spine in ax1.spines.values():
+        spine.set_edgecolor("#24242F")
 
     # Value annotations on bars
     for bar in bars1:
@@ -126,10 +137,12 @@ def generate_comparison_plots(results: list[dict], output_path: Path) -> None:
             va="bottom",
             fontsize=11,
             weight="bold",
+            color="#FFFFFF",
         )
 
     # --- Subplot 2: Per-Class F1-Score Breakdown ---
     ax2 = axes[1]
+    ax2.set_facecolor("#0B0B0F")
     x = np.arange(len(model_names))
     width = 0.25
 
@@ -137,17 +150,20 @@ def generate_comparison_plots(results: list[dict], output_path: Path) -> None:
     neu_f1s = [r["metrics"]["per_class"]["neutral"]["f1_score"] for r in results]
     pos_f1s = [r["metrics"]["per_class"]["positive"]["f1_score"] for r in results]
 
-    b_neg = ax2.bar(x - width, neg_f1s, width, label="Negative F1", color="#D95F02", edgecolor="black", linewidth=0.7)
-    b_neu = ax2.bar(x, neu_f1s, width, label="Neutral F1 (Focus)", color="#7570B3", edgecolor="black", linewidth=0.7)
-    b_pos = ax2.bar(x + width, pos_f1s, width, label="Positive F1", color="#1B9E77", edgecolor="black", linewidth=0.7)
+    b_neg = ax2.bar(x - width, neg_f1s, width, label="Negative F1", color="#E0122F", edgecolor="#121217", linewidth=0.8)
+    b_neu = ax2.bar(x, neu_f1s, width, label="Neutral F1 (Focus)", color="#8E8E93", edgecolor="#121217", linewidth=0.8)
+    b_pos = ax2.bar(x + width, pos_f1s, width, label="Positive F1", color="#1E6BFF", edgecolor="#121217", linewidth=0.8)
 
-    ax2.set_title("Class-Level F1-Scores Across Configurations", fontsize=13, weight="bold", pad=12)
-    ax2.set_ylabel("F1-Score", fontsize=11)
+    ax2.set_title("Class-Level F1-Scores Across Configurations", fontsize=13, weight="bold", pad=12, color="#FFFFFF")
+    ax2.set_ylabel("F1-Score", fontsize=11, color="#8E8E93")
     ax2.set_xticks(x)
-    ax2.set_xticklabels(model_names, fontsize=10)
+    ax2.set_xticklabels(model_names, fontsize=10, color="#8E8E93")
     ax2.set_ylim(0, 1.05)
-    ax2.legend(loc="upper right", frameon=True)
-    ax2.grid(axis="y", linestyle="--", alpha=0.5)
+    ax2.legend(loc="upper right", frameon=True, facecolor="#121217", edgecolor="#24242F", labelcolor="#FFFFFF")
+    ax2.grid(axis="y", linestyle="--", alpha=0.35, color="#24242F")
+    ax2.tick_params(colors="#8E8E93")
+    for spine in ax2.spines.values():
+        spine.set_edgecolor("#24242F")
 
     # Annotate neutral bars specifically
     for bar in b_neu:
@@ -161,14 +177,14 @@ def generate_comparison_plots(results: list[dict], output_path: Path) -> None:
             va="bottom",
             fontsize=9,
             weight="bold",
-            color="#7570B3",
+            color="#8E8E93",
         )
 
-    plt.suptitle("ReviewMind — Multinomial Naive Bayes Model Comparison", fontsize=15, weight="bold", y=1.02)
+    plt.suptitle("ReviewMind — Multinomial Naive Bayes Model Comparison", fontsize=15, weight="bold", y=1.02, color="#FFFFFF")
     plt.tight_layout()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.savefig(output_path, dpi=300, bbox_inches="tight", facecolor=fig.get_facecolor(), edgecolor="none")
     plt.close()
     print(f"   -> Comparison plot saved to: '{output_path}'")
 

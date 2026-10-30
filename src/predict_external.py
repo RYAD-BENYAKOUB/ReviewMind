@@ -107,26 +107,33 @@ def generate_visualization(
     overall_conf: float,
     output_path: Path,
 ) -> None:
-    """Génère et sauvegarde le graphique de distribution des sentiments et de confiance."""
+    """Génère et sauvegarde le graphique de distribution des sentiments et de confiance avec la charte ReviewMind Dark Intelligence."""
     fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
+    fig.patch.set_facecolor("#0B0B0F")
+
+    # Charte stricte Dark Intelligence
     colors = {
-        "negative": "#D95F02",
-        "neutral": "#7570B3",
-        "positive": "#1B9E77",
+        "negative": "#E0122F",
+        "neutral": "#8E8E93",
+        "positive": "#1E6BFF",
     }
     ordered_classes = ["negative", "neutral", "positive"]
 
     # --- Subplot 1 : Distribution des Sentiments Prédits ---
     ax1 = axes[0]
-    bar_colors = [colors.get(c, "#4C72B0") for c in ordered_classes]
+    ax1.set_facecolor("#0B0B0F")
+    bar_colors = [colors[c] for c in ordered_classes]
     counts = [sentiment_counts.get(c, 0) for c in ordered_classes]
     pcts = [sentiment_pcts.get(c, 0.0) for c in ordered_classes]
 
-    bars = ax1.bar(ordered_classes, counts, color=bar_colors, width=0.55, edgecolor="black", linewidth=0.8)
-    ax1.set_title("Distribution des Sentiments Prédits (Dataset B)", fontsize=13, weight="bold", pad=12)
-    ax1.set_ylabel("Nombre d'avis prédits", fontsize=11)
+    bars = ax1.bar(ordered_classes, counts, color=bar_colors, width=0.55, edgecolor="#121217", linewidth=0.8)
+    ax1.set_title("Distribution des Sentiments Prédits (Dataset B)", fontsize=13, weight="bold", pad=12, color="#FFFFFF")
+    ax1.set_ylabel("Nombre d'avis prédits", fontsize=11, color="#8E8E93")
     ax1.set_ylim(0, max(counts) * 1.18 if counts else 10)
-    ax1.grid(axis="y", linestyle="--", alpha=0.5)
+    ax1.grid(axis="y", linestyle="--", alpha=0.35, color="#24242F")
+    ax1.tick_params(colors="#8E8E93")
+    for spine in ax1.spines.values():
+        spine.set_edgecolor("#24242F")
 
     for bar, pct in zip(bars, pcts):
         height = bar.get_height()
@@ -139,18 +146,23 @@ def generate_visualization(
             va="bottom",
             fontsize=10,
             weight="bold",
+            color="#FFFFFF",
         )
 
     # --- Subplot 2 : Confiance Moyenne par Classe Prédite ---
     ax2 = axes[1]
+    ax2.set_facecolor("#0B0B0F")
     conf_values = [class_avg_conf.get(c, 0.0) * 100 for c in ordered_classes]
-    bars2 = ax2.bar(ordered_classes, conf_values, color=bar_colors, width=0.55, edgecolor="black", linewidth=0.8)
-    ax2.axhline(overall_conf * 100, color="red", linestyle="--", linewidth=1.5, label=f"Moyenne globale ({overall_conf*100:.1f}%)")
-    ax2.set_title("Niveau de Confiance Moyen par Classe Prédite", fontsize=13, weight="bold", pad=12)
-    ax2.set_ylabel("Confiance moyenne (%)", fontsize=11)
+    bars2 = ax2.bar(ordered_classes, conf_values, color=bar_colors, width=0.55, edgecolor="#121217", linewidth=0.8)
+    ax2.axhline(overall_conf * 100, color="#1E6BFF", linestyle="--", linewidth=1.5, label=f"Moyenne globale ({overall_conf*100:.1f}%)")
+    ax2.set_title("Niveau de Confiance Moyen par Classe Prédite", fontsize=13, weight="bold", pad=12, color="#FFFFFF")
+    ax2.set_ylabel("Confiance moyenne (%)", fontsize=11, color="#8E8E93")
     ax2.set_ylim(0, 105)
-    ax2.legend(loc="lower right", frameon=True)
-    ax2.grid(axis="y", linestyle="--", alpha=0.5)
+    ax2.legend(loc="lower right", frameon=True, facecolor="#121217", edgecolor="#24242F", labelcolor="#FFFFFF")
+    ax2.grid(axis="y", linestyle="--", alpha=0.35, color="#24242F")
+    ax2.tick_params(colors="#8E8E93")
+    for spine in ax2.spines.values():
+        spine.set_edgecolor("#24242F")
 
     for bar in bars2:
         height = bar.get_height()
@@ -163,13 +175,14 @@ def generate_visualization(
             va="bottom",
             fontsize=10,
             weight="bold",
+            color="#FFFFFF",
         )
 
-    plt.suptitle("ReviewMind — Prédictions Externes sur Eco-hotel Reviews (401 avis originaux / 399 uniques)", fontsize=14, weight="bold", y=1.02)
+    plt.suptitle("ReviewMind — Prédictions Externes sur Eco-hotel Reviews (401 avis originaux / 399 uniques)", fontsize=14, weight="bold", y=1.02, color="#FFFFFF")
     plt.tight_layout()
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    plt.savefig(output_path, dpi=300, bbox_inches="tight")
+    plt.savefig(output_path, dpi=300, bbox_inches="tight", facecolor=fig.get_facecolor(), edgecolor="none")
     plt.close()
     print(f"   -> Graphique sauvegardé : '{output_path}'")
 

@@ -35,6 +35,10 @@ venv.bak/
 # Data files (raw and processed datasets are excluded)
 data/*.csv
 data/**/*.csv
+data/*.svg
+
+# Generated prediction outputs containing raw dataset texts
+reports/external_predictions.csv
 
 # Trained models and serialized artifacts
 models/

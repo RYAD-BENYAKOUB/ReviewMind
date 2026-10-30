@@ -82,10 +82,36 @@ ReviewMind/
 │   ├── explore_external_data.py        # 6. Dataset B structural exploration
 │   ├── predict_external.py             # 7. Model inference on Dataset B
 │   └── prepare_annotations.py          # 8. Human annotation system setup
+├── backend/                            # Flask REST API Service Layer
+│   ├── app.py                          # Application factory, CORS, static serving & error handlers
+│   ├── config.py                       # Environment & filesystem path configurations
+│   ├── README.md                       # Comprehensive API documentation
+│   ├── requirements.txt                # Backend-specific dependencies
+│   ├── routes/                         # Modular REST API endpoints
+│   │   ├── datasets.py                 # GET /api/datasets
+│   │   ├── evaluation.py               # GET /api/evaluation
+│   │   ├── health.py                   # GET /api/health
+│   │   ├── predictions.py              # POST /api/predict
+│   │   └── reviews.py                  # GET /api/reviews, GET /api/reviews/<id>
+│   └── services/                       # Business & ML intelligence services
+│       ├── dataset_service.py          # Dataset B exploration & caching
+│       ├── evaluation_service.py       # Metrics, confusion matrix, consensus status
+│       └── model_service.py            # Singleton model loader & salient feature extractor
 ├── tests/                              # Automated unit tests (standard unittest)
 │   ├── __init__.py
+│   ├── test_backend.py                 # Comprehensive REST API & service tests
 │   ├── test_data_validation.py         # Tests for filtering and sentiment mapping
 │   └── test_pipeline.py                # Tests for pipeline, TF-IDF, MNB, and probas
+├── web/                                # Interactive Dark Intelligence Web Interface
+│   ├── index.html                      # Real-time dashboard application
+│   ├── app.js                          # Frontend UI orchestration & event logic
+│   ├── js/
+│   │   └── api.js                      # Centralized API service layer (pure backend calls)
+│   └── styles/
+│       ├── theme.css                   # Centralized CSS variables & Dark Intelligence theme
+│       └── tokens.json                 # Machine-readable brand design tokens
+├── index.html                          # Root redirect to web/index.html
+├── tailwind.config.js                  # Tailwind design system configuration
 ├── .github/                            # GitHub community health templates
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.md
@@ -323,6 +349,50 @@ for review, pred, probs in zip(new_reviews, predictions, probabilities):
     print(f"Sentiment: {pred}")
     print(f"Probabilities: {dict(zip(classes, probs.round(3)))}")
 ```
+
+---
+
+## Web Interface & Brand Design System (Dark Intelligence)
+
+ReviewMind includes an interactive, zero-dependency web dashboard embodying the **REVIEWMIND — DARK INTELLIGENCE** brand identity:
+
+```text
+BLACK : #0B0B0F  (Dominant Surface ~75%)
+BLUE  : #1E6BFF  (Secondary Accent ~15%)
+RED   : #E0122F  (Complementary Accent ~10%)
+```
+
+### Key UI Features
+- **Inference Studio**: Interactive textarea with live n-gram extraction, probability breakdown bars, and real-time sentiment scoring.
+- **Model Benchmark Tab**: Direct side-by-side comparison of MNB baseline, uniform prior, and champion alternative smoothing configurations.
+- **Dataset B Explorer**: Filterable browser for the 399 external eco-hotel reviews categorized by predicted sentiment and confidence level.
+- **Annotation Consensus View**: Walkthrough of the double-blind human annotation protocol and Cohen's $\kappa$ agreement workflow.
+- **Brand Tokens & Palette**: Visual design system tokens defined in `web/styles/tokens.json`, `web/styles/theme.css`, and `tailwind.config.js`.
+
+### Launching the Application (Flask API + Web Dashboard)
+
+ReviewMind uses a lightweight, production-grade Flask REST API powering the frontend interface:
+
+1. **Start the Flask Backend API**:
+```bash
+python backend/app.py
+```
+*The server initializes at `http://127.0.0.1:5000` and automatically preloads the Model 3 production pipeline.*
+
+2. **Access the Dashboard**:
+- Through Flask static serving: `http://127.0.0.1:5000/web/index.html` (or root `http://127.0.0.1:5000/`)
+- Or directly via file system: open `web/index.html` in your browser (CORS-enabled API connects seamlessly).
+
+### REST API Endpoints Overview
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/health` | Health check, model status, classes, and vocabulary size |
+| `GET` | `/api/dashboard` | Executive KPIs, model comparison summaries, and findings |
+| `GET` | `/api/datasets` | Metadata for Dataset A, Dataset B, and annotation status |
+| `GET` | `/api/reviews` | Paginated Dataset B reviews with sentiment filter & keyword search |
+| `GET` | `/api/reviews/<id>` | Single review detail by original index |
+| `POST` | `/api/predict` | Live sentiment classification with salient n-grams & probabilities |
+| `GET` | `/api/evaluation` | Model benchmark metrics, confusion matrix, & consensus status |
 
 ---
 
