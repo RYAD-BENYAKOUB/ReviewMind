@@ -1,0 +1,4 @@
+model_id,model_name,alpha,fit_prior,accuracy,macro_f1,weighted_f1,negative_precision,negative_recall,negative_f1,neutral_precision,neutral_recall,neutral_f1,neutral_predicted_count,positive_precision,positive_recall,positive_f1
+model_1,Model 1 (Baseline),1.0,True,0.8197,0.5249,0.7655,0.8937,0.549,0.6802,0.0,0.0,0.0,0,0.8118,0.996,0.8945
+model_2,Model 2 (Uniform Prior),1.0,False,0.8517,0.6153,0.8185,0.7126,0.8445,0.773,0.5781,0.0847,0.1477,64,0.8894,0.9642,0.9253
+model_3,Model 3 (Alternative Smoothing),0.1,False,0.8012,0.6762,0.8174,0.6804,0.8243,0.7454,0.3227,0.4874,0.3883,660,0.9553,0.8417,0.8949

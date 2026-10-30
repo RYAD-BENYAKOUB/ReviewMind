@@ -1,0 +1,77 @@
+{
+    "dataset_name": "Calheiros, Moro, Rita (2017) — Eco-hotel Reviews",
+    "file_name": "dataset-CalheirosMoroRita-2017.csv",
+    "encoding_used": "latin1",
+    "shape": {
+        "num_records": 401,
+        "num_columns": 1
+    },
+    "columns": [
+        "Review"
+    ],
+    "dtypes": {
+        "Review": "object"
+    },
+    "data_quality": {
+        "null_values": {
+            "Review": {
+                "missing_count": 0,
+                "percentage": 0.0
+            }
+        },
+        "empty_whitespace_reviews": 0,
+        "duplicate_records": 2
+    },
+    "column_roles": {
+        "text_column": "Review",
+        "annotation_columns": []
+    },
+    "annotations_distribution": {},
+    "sentiment_classes_constructible": false,
+    "sentiment_classes_assessment": [
+        "Le fichier ne contient aucune colonne de note numérique (Rating) ni de label de sentiment.",
+        "Il s'agit d'un corpus brut non étiqueté (unsupervised text corpus).",
+        "Impossible d'assigner objectivement des classes ground-truth (negative, neutral, positive) sans processus d'annotation externe."
+    ],
+    "sample_examples": [
+        {
+            "index": 0,
+            "review_preview": "Everything from the weather, staff, food, property, fire pits, décor, spa, rooms and beach were top notch",
+            "annotations": null
+        },
+        {
+            "index": 1,
+            "review_preview": "The hotel it is fantastic built by the sea, living together with nature. Environment it is great as well as people and service.\nWe full enjoyed the place, and facilities.\nThanks for the \"cidreira\" and \"madalenas\" tea at ...",
+            "annotations": null
+        },
+        {
+            "index": 2,
+            "review_preview": "One dream! Cozy  and comfortable Hotel!  The best personalized one! All the employees are congratulated! Very nice taste, since reception to the end of the stay! We were welcome with tea and cake, as I have gluten aversi...",
+            "annotations": null
+        },
+        {
+            "index": 3,
+            "review_preview": "Hotel concept is hard to grasp. They communicate environmental sustainability, through fashionable buzzwords like upcycling but they use pillows made out of duck feathers!?!\nPricing is utterly ridiculous, for what you ge...",
+            "annotations": null
+        },
+        {
+            "index": 4,
+            "review_preview": "This is a wonderful hotel, for a romantic escape. Every room has a theme, and is incredible, overlooking the sea, the sustainable concept of the hotel is excellent, modern design, the staff and owners will make your stay...",
+            "annotations": null
+        }
+    ],
+    "compatibility_with_reviewmind": {
+        "text_domain_compatibility": {
+            "status": "Compatible",
+            "details": "Le corpus est composé d'avis hôteliers en anglais portant sur l'hôtellerie (Areias do Seixo Eco-Resort), cohérent avec le domaine hôtelier de TripAdvisor."
+        },
+        "inference_compatibility": {
+            "status": "Totalement compatible",
+            "details": "Le modèle final 'models/reviewmind_final_model.joblib' peut ingérer directement la colonne 'Review' pour générer des prédictions de sentiments (negative, neutral, positive) sur ces 401 avis."
+        },
+        "supervised_evaluation_compatibility": {
+            "status": "Non compatible en l'état (absence de vérité terrain)",
+            "details": "Une évaluation quantitative supervisée (Accuracy, Macro F1, Matrice de confusion) est impossible directement sur ce fichier car il ne comporte aucune étiquette cible (ni note de 1 à 5, ni sentiment annoté). Pour une évaluation quantitative externe, une étape préalable d'annotation manuelle ou de récupération des notes sources est requise."
+        }
+    }
+}

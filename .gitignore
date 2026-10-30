@@ -58,3 +58,8 @@ models/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Testing and Coverage
+.pytest_cache/
+.coverage
+htmlcov/

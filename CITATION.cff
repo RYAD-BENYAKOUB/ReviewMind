@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use ReviewMind in your research or educational work, please cite it as below."
+title: "ReviewMind: Hotel Review Sentiment Classification with TF-IDF and Multinomial Naive Bayes"
+authors:
+  - family-names: "Benyakoub"
+    given-names: "Mohammed Ryad"
+    email: "ryadbenyakoub@gmail.com"
+repository-code: "https://github.com/RYAD-BENYAKOUB/ReviewMind"
+url: "https://github.com/RYAD-BENYAKOUB/ReviewMind"
+abstract: >-
+  ReviewMind is an open-source text data mining and natural language processing
+  project designed for hotel review sentiment classification. It features an
+  end-to-end pipeline using TF-IDF feature extraction, hyperparameter-tuned
+  Multinomial Naive Bayes, robust data preparation, and a dual-annotator human
+  consensus framework for external generalization assessment.
+keywords:
+  - natural-language-processing
+  - text-mining
+  - sentiment-analysis
+  - machine-learning
+  - tf-idf
+  - naive-bayes
+  - scikit-learn
+  - hotel-reviews
+license: "MIT"
+version: "1.0.0"
+date-released: "2026-10-30"
+

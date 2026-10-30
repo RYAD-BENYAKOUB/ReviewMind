@@ -1,0 +1,95 @@
+{
+    "dataset": {
+        "name": "TripAdvisor Hotel Reviews (Prepared)",
+        "file": "reviews_prepared.csv",
+        "total_samples": 20491,
+        "class_distribution": {
+            "negative": {
+                "count": 3214,
+                "percentage": 15.68
+            },
+            "neutral": {
+                "count": 2184,
+                "percentage": 10.66
+            },
+            "positive": {
+                "count": 15093,
+                "percentage": 73.66
+            }
+        }
+    },
+    "train_test_split": {
+        "test_size": 0.2,
+        "random_state": 42,
+        "stratify": true,
+        "train_samples": 16392,
+        "test_samples": 4099
+    },
+    "model_parameters": {
+        "pipeline": "TfidfVectorizer + MultinomialNB",
+        "tfidf": {
+            "ngram_range": [
+                1,
+                2
+            ],
+            "max_features": 20000
+        },
+        "multinomial_nb": {
+            "alpha": 1.0
+        }
+    },
+    "evaluation_metrics": {
+        "accuracy": 0.8197,
+        "macro_f1": 0.5249,
+        "weighted_f1": 0.7655,
+        "per_class": {
+            "negative": {
+                "precision": 0.8937,
+                "recall": 0.549,
+                "f1_score": 0.6802,
+                "support": 643
+            },
+            "neutral": {
+                "precision": 0.0,
+                "recall": 0.0,
+                "f1_score": 0.0,
+                "support": 437
+            },
+            "positive": {
+                "precision": 0.8118,
+                "recall": 0.996,
+                "f1_score": 0.8945,
+                "support": 3019
+            }
+        },
+        "confusion_matrix": {
+            "labels": [
+                "negative",
+                "neutral",
+                "positive"
+            ],
+            "matrix": [
+                [
+                    353,
+                    0,
+                    290
+                ],
+                [
+                    30,
+                    0,
+                    407
+                ],
+                [
+                    12,
+                    0,
+                    3007
+                ]
+            ]
+        }
+    },
+    "artifacts": {
+        "model_path": "models/reviewmind_internal_model.joblib",
+        "confusion_matrix_plot": "reports/internal_confusion_matrix.png",
+        "metrics_json": "reports/internal_metrics.json"
+    }
+}

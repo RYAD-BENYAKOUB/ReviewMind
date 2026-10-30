@@ -1,0 +1,212 @@
+{
+    "experiment": "ReviewMind Naive Bayes Model Comparison",
+    "dataset": {
+        "file": "reviews_prepared.csv",
+        "total_samples": 20491,
+        "train_samples": 16392,
+        "test_samples": 4099,
+        "test_size": 0.2,
+        "random_state": 42,
+        "stratified": true
+    },
+    "best_configuration": {
+        "model_id": "model_3",
+        "model_name": "Model 3 (Alternative Smoothing)",
+        "selection_criterion": "Highest Macro F1-score",
+        "macro_f1": 0.6762
+    },
+    "models": [
+        {
+            "id": "model_1",
+            "model_name": "Model 1 (Baseline)",
+            "parameters": {
+                "alpha": 1.0,
+                "fit_prior": true,
+                "tfidf_ngram_range": [
+                    1,
+                    2
+                ],
+                "tfidf_max_features": 20000
+            },
+            "description": "MultinomialNB(alpha=1.0, fit_prior=True) \u2014 Empirical class prior",
+            "metrics": {
+                "accuracy": 0.8197,
+                "macro_f1": 0.5249,
+                "weighted_f1": 0.7655,
+                "neutral_predictions_count": 0,
+                "per_class": {
+                    "negative": {
+                        "precision": 0.8937,
+                        "recall": 0.549,
+                        "f1_score": 0.6802,
+                        "support": 643
+                    },
+                    "neutral": {
+                        "precision": 0.0,
+                        "recall": 0.0,
+                        "f1_score": 0.0,
+                        "support": 437
+                    },
+                    "positive": {
+                        "precision": 0.8118,
+                        "recall": 0.996,
+                        "f1_score": 0.8945,
+                        "support": 3019
+                    }
+                },
+                "confusion_matrix": {
+                    "labels": [
+                        "negative",
+                        "neutral",
+                        "positive"
+                    ],
+                    "matrix": [
+                        [
+                            353,
+                            0,
+                            290
+                        ],
+                        [
+                            30,
+                            0,
+                            407
+                        ],
+                        [
+                            12,
+                            0,
+                            3007
+                        ]
+                    ]
+                }
+            }
+        },
+        {
+            "id": "model_2",
+            "model_name": "Model 2 (Uniform Prior)",
+            "parameters": {
+                "alpha": 1.0,
+                "fit_prior": false,
+                "tfidf_ngram_range": [
+                    1,
+                    2
+                ],
+                "tfidf_max_features": 20000
+            },
+            "description": "MultinomialNB(alpha=1.0, fit_prior=False) \u2014 Uniform class prior",
+            "metrics": {
+                "accuracy": 0.8517,
+                "macro_f1": 0.6153,
+                "weighted_f1": 0.8185,
+                "neutral_predictions_count": 64,
+                "per_class": {
+                    "negative": {
+                        "precision": 0.7126,
+                        "recall": 0.8445,
+                        "f1_score": 0.773,
+                        "support": 643
+                    },
+                    "neutral": {
+                        "precision": 0.5781,
+                        "recall": 0.0847,
+                        "f1_score": 0.1477,
+                        "support": 437
+                    },
+                    "positive": {
+                        "precision": 0.8894,
+                        "recall": 0.9642,
+                        "f1_score": 0.9253,
+                        "support": 3019
+                    }
+                },
+                "confusion_matrix": {
+                    "labels": [
+                        "negative",
+                        "neutral",
+                        "positive"
+                    ],
+                    "matrix": [
+                        [
+                            543,
+                            12,
+                            88
+                        ],
+                        [
+                            126,
+                            37,
+                            274
+                        ],
+                        [
+                            93,
+                            15,
+                            2911
+                        ]
+                    ]
+                }
+            }
+        },
+        {
+            "id": "model_3",
+            "model_name": "Model 3 (Alternative Smoothing)",
+            "parameters": {
+                "alpha": 0.1,
+                "fit_prior": false,
+                "tfidf_ngram_range": [
+                    1,
+                    2
+                ],
+                "tfidf_max_features": 20000
+            },
+            "description": "MultinomialNB(alpha=0.1, fit_prior=False) \u2014 Uniform prior + lower alpha",
+            "metrics": {
+                "accuracy": 0.8012,
+                "macro_f1": 0.6762,
+                "weighted_f1": 0.8174,
+                "neutral_predictions_count": 660,
+                "per_class": {
+                    "negative": {
+                        "precision": 0.6804,
+                        "recall": 0.8243,
+                        "f1_score": 0.7454,
+                        "support": 643
+                    },
+                    "neutral": {
+                        "precision": 0.3227,
+                        "recall": 0.4874,
+                        "f1_score": 0.3883,
+                        "support": 437
+                    },
+                    "positive": {
+                        "precision": 0.9553,
+                        "recall": 0.8417,
+                        "f1_score": 0.8949,
+                        "support": 3019
+                    }
+                },
+                "confusion_matrix": {
+                    "labels": [
+                        "negative",
+                        "neutral",
+                        "positive"
+                    ],
+                    "matrix": [
+                        [
+                            530,
+                            99,
+                            14
+                        ],
+                        [
+                            119,
+                            213,
+                            105
+                        ],
+                        [
+                            130,
+                            348,
+                            2541
+                        ]
+                    ]
+                }
+            }
+        }
+    ]
+}

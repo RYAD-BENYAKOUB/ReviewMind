@@ -1,0 +1,202 @@
+{
+    "metadata": {
+        "task": "External Dataset Sentiment Prediction",
+        "model_source": "reviewmind_final_model.joblib",
+        "external_dataset": "dataset-CalheirosMoroRita-2017.csv",
+        "total_raw_records": 401,
+        "duplicate_records_excluded": 2,
+        "unique_records_analyzed": 399
+    },
+    "predicted_sentiment_distribution": {
+        "negative": {
+            "count": 31,
+            "percentage": 7.77,
+            "average_confidence": 0.4603
+        },
+        "neutral": {
+            "count": 33,
+            "percentage": 8.27,
+            "average_confidence": 0.4237
+        },
+        "positive": {
+            "count": 335,
+            "percentage": 83.96,
+            "average_confidence": 0.6003
+        }
+    },
+    "confidence_statistics": {
+        "overall_mean": 0.5748,
+        "overall_median": 0.5666,
+        "overall_min": 0.3464,
+        "overall_max": 0.9258,
+        "low_confidence_threshold": 0.6,
+        "low_confidence_count": 230,
+        "low_confidence_percentage": 57.64
+    },
+    "sample_predictions_by_sentiment": {
+        "negative": [
+            {
+                "original_index": 16,
+                "confidence": 0.3766,
+                "probabilities": {
+                    "negative": 0.3766,
+                    "neutral": 0.295,
+                    "positive": 0.3284
+                },
+                "review_snippet": "     We had a truly memorable and delightful stay at Areas do Seixo. After some difficulty in finding it (GPS was helpful), we knew the moment we walked in that this was a special ..."
+            },
+            {
+                "original_index": 25,
+                "confidence": 0.3624,
+                "probabilities": {
+                    "negative": 0.3624,
+                    "neutral": 0.2997,
+                    "positive": 0.338
+                },
+                "review_snippet": "     My co-workers loved this place and its service! Congratulations! Next time it will be really hard to find a place that could overcome this one!! Some of them even ask if they ..."
+            },
+            {
+                "original_index": 30,
+                "confidence": 0.4133,
+                "probabilities": {
+                    "negative": 0.4133,
+                    "neutral": 0.2771,
+                    "positive": 0.3096
+                },
+                "review_snippet": "     The hotel is in its whole a fantastic experience. Beautiful architecture, interior décor absolutely fascinating, full of little details standing for difference. The staff is e..."
+            },
+            {
+                "original_index": 88,
+                "confidence": 0.4772,
+                "probabilities": {
+                    "negative": 0.4772,
+                    "neutral": 0.1929,
+                    "positive": 0.3299
+                },
+                "review_snippet": "      Since princess Olive to floral corners full of aromas and musicfew words for a moment as good. Enchanting       "
+            },
+            {
+                "original_index": 114,
+                "confidence": 0.4382,
+                "probabilities": {
+                    "negative": 0.4382,
+                    "neutral": 0.271,
+                    "positive": 0.2908
+                },
+                "review_snippet": "      A place to feel and feelholdings hands, and doing it over and over again. Because life is to enjoy. See you soon.       "
+            }
+        ],
+        "neutral": [
+            {
+                "original_index": 1,
+                "confidence": 0.4055,
+                "probabilities": {
+                    "negative": 0.195,
+                    "neutral": 0.4055,
+                    "positive": 0.3995
+                },
+                "review_snippet": "The hotel it is fantastic built by the sea, living together with nature. Environment it is great as well as people and service.\nWe full enjoyed the place, and facilities.\nThanks fo..."
+            },
+            {
+                "original_index": 3,
+                "confidence": 0.4135,
+                "probabilities": {
+                    "negative": 0.3168,
+                    "neutral": 0.4135,
+                    "positive": 0.2697
+                },
+                "review_snippet": "Hotel concept is hard to grasp. They communicate environmental sustainability, through fashionable buzzwords like upcycling but they use pillows made out of duck feathers!?!\nPricin..."
+            },
+            {
+                "original_index": 18,
+                "confidence": 0.5033,
+                "probabilities": {
+                    "negative": 0.2127,
+                    "neutral": 0.5033,
+                    "positive": 0.284
+                },
+                "review_snippet": " A lovely and warm place, food from the professional Chef Leonardo Pereira, with a lot of good surprises, unexpected and keeping up with a careful explanation. Enjoyed particularly..."
+            },
+            {
+                "original_index": 23,
+                "confidence": 0.4299,
+                "probabilities": {
+                    "negative": 0.2342,
+                    "neutral": 0.4299,
+                    "positive": 0.3359
+                },
+                "review_snippet": " Considering the entire experience, it is different from any other and a very pleasant one! Nice service, the dishes are prepared with ingredients which we are not used to in our d..."
+            },
+            {
+                "original_index": 29,
+                "confidence": 0.3534,
+                "probabilities": {
+                    "negative": 0.303,
+                    "neutral": 0.3534,
+                    "positive": 0.3436
+                },
+                "review_snippet": "      Everything good. To repeat one day, for sure. And also recommend.        "
+            }
+        ],
+        "positive": [
+            {
+                "original_index": 0,
+                "confidence": 0.6028,
+                "probabilities": {
+                    "negative": 0.2138,
+                    "neutral": 0.1834,
+                    "positive": 0.6028
+                },
+                "review_snippet": " Everything from the weather, staff, food, property, fire pits, décor, spa, rooms and beach were top notch"
+            },
+            {
+                "original_index": 2,
+                "confidence": 0.4123,
+                "probabilities": {
+                    "negative": 0.3528,
+                    "neutral": 0.2349,
+                    "positive": 0.4123
+                },
+                "review_snippet": "One dream! Cozy  and comfortable Hotel!  The best personalized one! All the employees are congratulated! Very nice taste, since reception to the end of the stay! We were welcome wi..."
+            },
+            {
+                "original_index": 4,
+                "confidence": 0.7779,
+                "probabilities": {
+                    "negative": 0.0729,
+                    "neutral": 0.1492,
+                    "positive": 0.7779
+                },
+                "review_snippet": "This is a wonderful hotel, for a romantic escape. Every room has a theme, and is incredible, overlooking the sea, the sustainable concept of the hotel is excellent, modern design, ..."
+            },
+            {
+                "original_index": 5,
+                "confidence": 0.803,
+                "probabilities": {
+                    "negative": 0.0651,
+                    "neutral": 0.132,
+                    "positive": 0.803
+                },
+                "review_snippet": "Gold room fantastic. We loved and we will come back! "
+            },
+            {
+                "original_index": 6,
+                "confidence": 0.4978,
+                "probabilities": {
+                    "negative": 0.1998,
+                    "neutral": 0.3024,
+                    "positive": 0.4978
+                },
+                "review_snippet": "One of the best Hotels in the world, and in the treatment is the best!!! Room Mi Ma Bo is fantastic! Poetry all over the place.        "
+            }
+        ]
+    },
+    "methodological_note": {
+        "important": "These predicted sentiment labels and probabilities represent inferences generated by the ReviewMind production model trained on TripAdvisor reviews. They are NOT ground-truth human annotations. Since Dataset B contains no original ratings or verified sentiment labels, no accuracy, precision, recall, or F1-score can be calculated on this external corpus."
+    },
+    "output_files": {
+        "predictions_csv": "reports/external_predictions.csv",
+        "summary_json": "reports/external_prediction_summary.json",
+        "distribution_plot": "reports/external_sentiment_distribution.png"
+    }
+}

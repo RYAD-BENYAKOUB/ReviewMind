@@ -1,0 +1,55 @@
+{
+    "model_name": "ReviewMind Final Production Model",
+    "status": "Trained on 100% of Dataset A",
+    "training_timestamp_utc": "2026-10-30T14:55:12.769033+00:00",
+    "training_duration_seconds": 13.836,
+    "dataset": {
+        "name": "TripAdvisor Hotel Reviews (Prepared)",
+        "filename": "reviews_prepared.csv",
+        "total_records": 20491,
+        "class_distribution": {
+            "negative": {
+                "count": 3214,
+                "percentage": 15.68
+            },
+            "neutral": {
+                "count": 2184,
+                "percentage": 10.66
+            },
+            "positive": {
+                "count": 15093,
+                "percentage": 73.66
+            }
+        }
+    },
+    "model_architecture": {
+        "pipeline": "TfidfVectorizer + MultinomialNB",
+        "selected_configuration": "Model 3 (Alternative Smoothing)",
+        "tfidf_parameters": {
+            "ngram_range": [
+                1,
+                2
+            ],
+            "max_features": 20000
+        },
+        "naive_bayes_parameters": {
+            "alpha": 0.1,
+            "fit_prior": false
+        }
+    },
+    "environment": {
+        "python_version": "3.13.5",
+        "scikit_learn_version": "1.6.1",
+        "pandas_version": "2.2.3",
+        "joblib_version": "1.4.2",
+        "platform": "Windows-11-10.0.26200-SP0"
+    },
+    "evaluation_protocol": {
+        "policy": "No evaluation performed on training data",
+        "evaluation_note": "This production model was fitted on the entirety of Dataset A to maximize vocabulary coverage and classification capability. Generalization metrics must be measured on an independent labeled Dataset B."
+    },
+    "saved_artifacts": {
+        "model_path": "models/reviewmind_final_model.joblib",
+        "metadata_path": "reports/final_model_metadata.json"
+    }
+}
