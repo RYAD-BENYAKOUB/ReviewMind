@@ -108,7 +108,38 @@ class EvaluationService:
     def check_human_consensus_status(self) -> dict[str, Any]:
         """
         Check if the human consensus file contains completed ground truth annotations.
+        Reads annotation_progress.json if available, or inspects annotation_consensus.csv directly.
         """
+        progress_file = Config.ANNOTATION_PROGRESS_PATH
+        if progress_file.exists():
+            progress_data = self._read_json_safe(progress_file)
+            if progress_data:
+                finalized = progress_data.get("finalized_consensus_count", 0)
+                total = progress_data.get("total_unique_reviews", 399)
+                status = progress_data.get("consensus_status", "pending")
+                available = (status == "complete" and finalized == total)
+
+                msg = (
+                    "Human annotation consensus for Dataset B is currently pending. "
+                    "In accordance with ReviewMind scientific protocol, supervised metrics "
+                    "(Accuracy, F1) are not generated on unverified test data."
+                    if not available
+                    else "Human consensus ground truth established for all reviews."
+                )
+
+                return {
+                    "status": status,
+                    "available": available,
+                    "message": msg,
+                    "labeled_records": finalized,
+                    "total_records": total,
+                    "progress_percentage": progress_data.get("finalized_consensus_percentage", 0.0),
+                    "agreements_count": progress_data.get("agreements_count", 0),
+                    "disagreements_count": progress_data.get("disagreements_count", 0),
+                    "cohens_kappa": progress_data.get("cohens_kappa"),
+                    "kappa_interpretation": progress_data.get("kappa_interpretation"),
+                }
+
         consensus_file = Config.ANNOTATION_CONSENSUS_PATH
         if not consensus_file.exists():
             return {
@@ -119,14 +150,17 @@ class EvaluationService:
 
         try:
             df = pd.read_csv(consensus_file)
-            if "Human_Sentiment" not in df.columns:
+            col_target = "Consensus_Sentiment" if "Consensus_Sentiment" in df.columns else (
+                "Human_Sentiment" if "Human_Sentiment" in df.columns else None
+            )
+            if col_target is None:
                 return {
                     "status": "pending",
                     "available": False,
-                    "message": "Required Human_Sentiment column not found.",
+                    "message": "Required sentiment column not found in consensus file.",
                 }
 
-            non_null = df["Human_Sentiment"].dropna().astype(str).str.strip()
+            non_null = df[col_target].dropna().astype(str).str.strip()
             filled_count = int((non_null != "").sum())
             total_count = len(df)
 
@@ -178,7 +212,20 @@ class EvaluationService:
         internal_data = self._read_json_safe(Config.INTERNAL_METRICS_PATH)
         comparison_data = self._read_json_safe(Config.MODEL_COMPARISON_PATH)
         external_summary = self._read_json_safe(Config.EXTERNAL_SUMMARY_PATH)
+        external_eval_data = self._read_json_safe(Config.EXTERNAL_EVALUATION_PATH)
         consensus_status = self.check_human_consensus_status()
+
+        # Find Champion Model 3 confusion matrix for frontend display
+        champion_cm = None
+        for m in comparison_data.get("models", []):
+            if m.get("id") == "model_3":
+                champion_cm = m.get("metrics", {}).get("confusion_matrix")
+                break
+        if not champion_cm:
+            champion_cm = internal_data.get("evaluation_metrics", {}).get("confusion_matrix", {
+                "labels": ["negative", "neutral", "positive"],
+                "matrix": [[530, 99, 14], [119, 213, 105], [130, 348, 2541]],
+            })
 
         # Build clean response
         report: dict[str, Any] = {
@@ -193,6 +240,7 @@ class EvaluationService:
                     "macro_f1": 0.6762,
                     "accuracy": 0.8012,
                 }),
+                "confusion_matrix": champion_cm,
                 "baseline_confusion_matrix": internal_data.get("evaluation_metrics", {}).get("confusion_matrix", {
                     "labels": ["negative", "neutral", "positive"],
                     "matrix": [[353, 0, 290], [30, 0, 407], [12, 0, 3007]],
@@ -204,6 +252,8 @@ class EvaluationService:
                 "supervised_metrics_status": consensus_status["status"],
                 "human_consensus_available": consensus_status["available"],
                 "notice": consensus_status["message"],
+                "consensus_details": consensus_status,
+                "supervised_metrics": external_eval_data.get("metrics") if external_eval_data.get("evaluation_available") else None,
                 "inferences_summary": external_summary.get("predicted_sentiment_distribution", {}),
                 "confidence_statistics": external_summary.get("confidence_statistics", {}),
                 "annotation_protocol": {
@@ -211,7 +261,9 @@ class EvaluationService:
                     "annotator_A_template": "data/external/annotator_A.csv",
                     "annotator_B_template": "data/external/annotator_B.csv",
                     "consensus_target": "data/external/annotation_consensus.csv",
-                    "status": "double_blind_in_progress",
+                    "disagreements_file": "data/external/annotation_disagreements.csv",
+                    "progress_file": "data/external/annotation_progress.json",
+                    "status": consensus_status["status"],
                 },
             },
         }

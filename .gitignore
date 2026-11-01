@@ -36,13 +36,15 @@ venv.bak/
 data/*.csv
 data/**/*.csv
 data/*.svg
+data/external/*.json
 
 # Generated prediction outputs containing raw dataset texts
 reports/external_predictions.csv
 
 # Trained models and serialized artifacts
-models/
-*.joblib
+/models/*
+!/models/reviewmind_final_model.joblib
+
 *.pkl
 
 # Environment variables and secrets

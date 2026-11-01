@@ -1,0 +1,28 @@
+================================================================================
+          REVIEWMIND — INTER-ANNOTATOR AGREEMENT & CONSENSUS REPORT
+================================================================================
+Dataset Name                : Eco-hotel Reviews (Calheiros et al., 2017)
+Total Unique Reviews        : 399
+
+1. ANNOTATOR COMPLETION:
+   - Annotator A            : 0/399 (0.0%)
+   - Annotator B            : 0/399 (0.0%)
+   - Double-Labeled Reviews : 0/399 (0.0%)
+
+2. AGREEMENT & RELIABILITY (Computed strictly on double-labeled subset):
+   - Perfect Agreements     : 0 (0.0%)
+   - Disagreements          : 0
+   - Cohen's Kappa          : N/A
+   - Interpretation         : Not Applicable (Insufficient double-labeled data)
+
+3. CONSENSUS WORKFLOW STATUS:
+   - Finalized Consensus    : 0/399 (0.0%)
+   - Requires Adjudication  : 0
+   - Incomplete / Pending   : 399
+   - Global Consensus Status: PENDING
+
+METHODOLOGICAL NOTICE:
+In strict compliance with academic text mining standards, supervised metrics
+(Accuracy, Precision, Recall, Macro F1) are NOT computed on Dataset B until
+human consensus adjudication is fully finalized across all reviews.
+================================================================================

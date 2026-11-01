@@ -226,10 +226,16 @@ function renderConfusionMatrix(matrixData) {
 async function loadDatasetMetadata() {
   try {
     const data = await window.apiService.getDatasets();
-    if (data && data.dataset_a) {
-      const headerBadge = document.getElementById('header-dataset-badge');
-      if (headerBadge) {
-        headerBadge.textContent = `Dataset A: ${Number(data.dataset_a.rows_count).toLocaleString()} Reviews`;
+    if (data) {
+      const datasetA = Array.isArray(data.datasets)
+        ? data.datasets.find((d) => d.id === 'dataset_a')
+        : data.dataset_a;
+      if (datasetA) {
+        const headerBadge = document.getElementById('header-dataset-badge');
+        if (headerBadge) {
+          const count = datasetA.total_records || datasetA.rows_count || 20491;
+          headerBadge.textContent = `Dataset A: ${Number(count).toLocaleString()} Reviews`;
+        }
       }
     }
   } catch (err) {
@@ -579,6 +585,8 @@ function renderReviewCards(reviews) {
     const pNeu = probs.neutral != null ? (probs.neutral * 100).toFixed(1) : '0.0';
     const pPos = probs.positive != null ? (probs.positive * 100).toFixed(1) : '0.0';
 
+    const reviewText = item.text || item.review || '';
+
     card.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -587,7 +595,7 @@ function renderReviewCards(reviews) {
         </div>
         <span style="font-size: 12px; font-weight: 700; color: var(--rm-text-primary);">${confVal}% Conf</span>
       </div>
-      <p style="font-size: 13px; color: var(--rm-text-secondary); line-height: 1.5; margin-bottom: 12px;">"${escapeHtml(item.text)}"</p>
+      <p style="font-size: 13px; color: var(--rm-text-secondary); line-height: 1.5; margin-bottom: 12px;">"${escapeHtml(reviewText)}"</p>
       <div style="display: flex; gap: 16px; font-size: 11px; color: var(--rm-text-muted);">
         <span>Neg: <strong style="color: var(--rm-red);">${pNeg}%</strong></span>
         <span>Neu: <strong style="color: var(--rm-gray-muted);">${pNeu}%</strong></span>

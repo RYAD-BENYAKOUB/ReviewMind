@@ -1,0 +1,25 @@
+{
+    "dataset_name": "Eco-hotel Reviews (Dataset B, Calheiros et al., 2017)",
+    "total_unique_reviews": 399,
+    "annotator_A": {
+        "completed": 0,
+        "completion_percentage": 0.0,
+        "missing": 399
+    },
+    "annotator_B": {
+        "completed": 0,
+        "completion_percentage": 0.0,
+        "missing": 399
+    },
+    "double_labeled_count": 0,
+    "agreements_count": 0,
+    "disagreements_count": 0,
+    "incomplete_count": 399,
+    "adjudicated_count": 0,
+    "finalized_consensus_count": 0,
+    "finalized_consensus_percentage": 0.0,
+    "agreement_rate_percentage": 0.0,
+    "cohens_kappa": null,
+    "kappa_interpretation": "Not Applicable (Insufficient double-labeled data)",
+    "consensus_status": "pending"
+}

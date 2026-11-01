@@ -1,0 +1,3 @@
+REVIEWMIND — EXTERNAL EVALUATION REPORT
+Status: PENDING
+No human consensus labels available yet. External supervised evaluation is PENDING. In strict accordance with academic text mining standards, supervised metrics (Accuracy, F1) are not calculated or published without verified human reference labels.

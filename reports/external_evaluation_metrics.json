@@ -1,0 +1,11 @@
+{
+    "status": "pending",
+    "evaluation_available": false,
+    "evaluation_scope": "none",
+    "message": "No human consensus labels available yet. External supervised evaluation is PENDING. In strict accordance with academic text mining standards, supervised metrics (Accuracy, F1) are not calculated or published without verified human reference labels.",
+    "dataset_name": "Eco-hotel Reviews (Dataset B, Calheiros et al., 2017)",
+    "total_reviews": 399,
+    "labeled_reviews_count": 0,
+    "excluded_reviews_count": 399,
+    "metrics": null
+}

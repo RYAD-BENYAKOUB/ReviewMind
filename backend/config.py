@@ -19,6 +19,8 @@ class Config:
     DATASET_B_RAW_PATH = DATA_DIR / "dataset-CalheirosMoroRita-2017.csv"
     ANNOTATIONS_DIR = DATA_DIR / "external"
     ANNOTATION_CONSENSUS_PATH = ANNOTATIONS_DIR / "annotation_consensus.csv"
+    ANNOTATION_DISAGREEMENTS_PATH = ANNOTATIONS_DIR / "annotation_disagreements.csv"
+    ANNOTATION_PROGRESS_PATH = ANNOTATIONS_DIR / "annotation_progress.json"
     ANNOTATION_GUIDELINES_PATH = ANNOTATIONS_DIR / "ANNOTATION_GUIDELINES.md"
 
     # Models directory & artifacts
@@ -34,6 +36,8 @@ class Config:
     EXTERNAL_PREDICTIONS_PATH = REPORTS_DIR / "external_predictions.csv"
     EXTERNAL_SUMMARY_PATH = REPORTS_DIR / "external_prediction_summary.json"
     EXTERNAL_EXPLORATION_PATH = REPORTS_DIR / "external_dataset_exploration.json"
+    ANNOTATION_AGREEMENT_PATH = REPORTS_DIR / "annotation_agreement.json"
+    EXTERNAL_EVALUATION_PATH = REPORTS_DIR / "external_evaluation_metrics.json"
 
     # Flask Settings
     SECRET_KEY = os.environ.get("SECRET_KEY", "reviewmind-dark-intelligence-dev-key")

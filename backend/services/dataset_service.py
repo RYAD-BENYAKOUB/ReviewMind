@@ -81,9 +81,11 @@ class DatasetService:
             reviews: list[dict[str, Any]] = []
 
             for _, row in df.iterrows():
+                review_text = str(row["Review"]).strip()
                 reviews.append({
                     "original_index": int(row["original_index"]),
-                    "review": str(row["Review"]).strip(),
+                    "review": review_text,
+                    "text": review_text,
                     "predicted_sentiment": str(row["Predicted_Sentiment"]).lower(),
                     "confidence": round(float(row["Confidence"]), 4),
                     "probabilities": {
@@ -136,7 +138,13 @@ class DatasetService:
         end_idx = start_idx + per_page
         paginated_items = filtered[start_idx:end_idx]
 
+        pos_count = sum(1 for r in all_reviews if r["predicted_sentiment"] == "positive")
+        neu_count = sum(1 for r in all_reviews if r["predicted_sentiment"] == "neutral")
+        neg_count = sum(1 for r in all_reviews if r["predicted_sentiment"] == "negative")
+        total_cache = len(all_reviews) if all_reviews else 1
+
         return {
+            "status": "success",
             "dataset_id": dataset_id,
             "total_items": total_items,
             "page": page,
@@ -144,6 +152,23 @@ class DatasetService:
             "total_pages": total_pages,
             "has_next": page < total_pages,
             "has_prev": page > 1,
+            "pagination": {
+                "page": page,
+                "per_page": per_page,
+                "total_pages": total_pages,
+                "total_reviews": total_items,
+                "has_next": page < total_pages,
+                "has_prev": page > 1,
+            },
+            "distribution": {
+                "total": len(all_reviews),
+                "positive": pos_count,
+                "positive_pct": round((pos_count / total_cache) * 100, 1),
+                "neutral": neu_count,
+                "neutral_pct": round((neu_count / total_cache) * 100, 1),
+                "negative": neg_count,
+                "negative_pct": round((neg_count / total_cache) * 100, 1),
+            },
             "filters": {
                 "sentiment": sentiment,
                 "query": query,
